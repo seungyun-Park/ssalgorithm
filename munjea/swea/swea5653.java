@@ -8,8 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+enum State { INACTIVE, ACTIVE, DEAD }
+
 class Cell implements Comparable<Cell> {
-    enum State { INACTIVE, ACTIVE, DEAD }
     
     int x, y;
     int life;
@@ -34,9 +35,6 @@ class Cell implements Comparable<Cell> {
             }
         } else if (state == State.ACTIVE) {
             activeTime--;
-            if (activeTime == 0) {
-                state = State.DEAD;
-            }
         }
     }
     
@@ -84,28 +82,58 @@ public class swea5653 {
             // K시간 시뮬레이션
             for (int time = 0; time < K; time++) {
                 List<Cell> activeCells = new ArrayList<>();
+                
                 for (int i = 0; i < xSize; i++) {
                     for (int j = 0; j < ySize; j++) {
-                        if (grid[i][j] != null) {
+                        if (grid[i][j] != null && grid[i][j].isAlive()) {
                             activeCells.add(grid[i][j]);
                         }
                     }
                 }
                 
+                
+                
+                
                 activeCells.sort(Collections.reverseOrder());
-                List<Cell> newCells = new ArrayList<>();
+                
                 for (Cell cell : activeCells) {
                     cell.go();
                     if (cell.canSpread()) {
                     	//spread 가능할때 로직 필요
+                    	if(grid[cell.x][cell.y - 1] == null) {
+	                    	grid[cell.x][cell.y - 1] = new Cell(cell.x, cell.y-1, cell.life);
+                    	}
+                    	if(grid[cell.x][cell.y + 1] == null) {
+	                    	grid[cell.x][cell.y + 1] = new Cell(cell.x, cell.y+1, cell.life);
+                    	}
+                    	if(grid[cell.x-1][cell.y] == null) {
+	                    	grid[cell.x - 1][cell.y] = new Cell(cell.x-1, cell.y, cell.life);
+                    	}
+                    	if(grid[cell.x+1][cell.y] == null) {
+	                    	grid[cell.x + 1][cell.y] = new Cell(cell.x+1, cell.y, cell.life);
+                    	}
                     }
-                }
-                
-                //spread하고 grid에 추가
-                for (Cell newCell : newCells) {
-                    grid[newCell.x][newCell.y] = newCell;
+                    
+                    if(cell.activeTime == 0 && cell.isAlive()) {
+                		cell.state = State.DEAD;
+                	}
+                    //더 죽었거나
+                    //덜 배양됐거나
+                    //덜 죽음
                 }
             }
+            
+            for (int i = 0; i < xSize; i++) {
+				for (int j = 0; j < ySize; j++) {
+					if(grid[i][j] != null) {
+						System.out.print(grid[i][j].activeTime + "\t");
+					}
+					else {
+						System.out.print(grid[i][j] + "\t");
+					}
+				}
+				System.out.println();
+			}
             
             // 출력 부분
             int count = 0;

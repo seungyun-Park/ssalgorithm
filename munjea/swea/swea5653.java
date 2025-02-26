@@ -1,4 +1,4 @@
-package swea;
+package test1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -94,12 +94,12 @@ public class swea5653 {
                 
                 
                 
-                activeCells.sort(Collections.reverseOrder());
+                activeCells.sort(null);
                 
                 for (Cell cell : activeCells) {
                     cell.go();
                     if (cell.canSpread()) {
-                    	//spread 가능할때 로직 필요
+                    	//spread 가능할때 
                     	if(grid[cell.x][cell.y - 1] == null) {
 	                    	grid[cell.x][cell.y - 1] = new Cell(cell.x, cell.y-1, cell.life);
                     	}
@@ -117,23 +117,8 @@ public class swea5653 {
                     if(cell.activeTime == 0 && cell.isAlive()) {
                 		cell.state = State.DEAD;
                 	}
-                    //더 죽었거나
-                    //덜 배양됐거나
-                    //덜 죽음
                 }
             }
-            
-            for (int i = 0; i < xSize; i++) {
-				for (int j = 0; j < ySize; j++) {
-					if(grid[i][j] != null) {
-						System.out.print(grid[i][j].activeTime + "\t");
-					}
-					else {
-						System.out.print(grid[i][j] + "\t");
-					}
-				}
-				System.out.println();
-			}
             
             // 출력 부분
             int count = 0;
